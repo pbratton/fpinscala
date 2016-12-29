@@ -52,37 +52,47 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
 
-  def tail[A](l: List[A]): List[A] = l match {
-    case Nil => Nil
-    case Cons(x,xs) => xs
-  }
+  def tail[A](l: List[A]): List[A] = 
+    l match {
+      case Nil => Nil
+      case Cons(x,xs) => xs
+    }
 
-  def setHead[A](l: List[A], h: A): List[A] = l match {
-    case Nil => Cons(h, Nil)
-    case Cons(x,xs) => Cons(h, tail(l))
-  }
-
-  @tailrec
-  def drop[A](l: List[A], n: Int): List[A] = l match {
-    case Nil => Nil
-    case Cons(x,xs) => if (n <= 0) l else drop(xs, n-1)
-  }
+  def setHead[A](l: List[A], h: A): List[A] = 
+    l match {
+      case Nil => Cons(h, Nil)
+      case Cons(x,xs) => Cons(h, tail(l))
+    }
 
   @tailrec
-  def dropWhile[A](l: List[A])(f: A => Boolean): List[A] = l match {
-    case Nil => Nil
-    case Cons(x,xs) => if (f(x)) dropWhile(xs)(f) else l 
-  }
+  def drop[A](l: List[A], n: Int): List[A] = 
+    l match {
+      case Nil => Nil
+      case Cons(x,xs) => if (n <= 0) l else drop(xs, n-1)
+    }
 
-  def init[A](l: List[A]): List[A] = l match {
-    case Nil => Nil
-    case Cons(x, Nil) => Nil
-    case Cons(x, xs) => Cons(x, init(xs))
-  }
+  @tailrec
+  def dropWhile[A](l: List[A])(f: A => Boolean): List[A] = 
+    l match {
+      case Nil => Nil
+      case Cons(x,xs) => if (f(x)) dropWhile(xs)(f) else l 
+    }
+
+  def init[A](l: List[A]): List[A] = 
+    l match {
+      case Nil => Nil
+      case Cons(x, Nil) => Nil
+      case Cons(x, xs) => Cons(x, init(xs))
+    }
 
   def length[A](l: List[A]): Int = foldRight(l, 0)((x: A, y: Int) => y + 1)
 
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = sys.error("todo")
+  @tailrec
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = 
+    l match {
+      case Nil => z
+      case Cons(x, xs) => foldLeft(xs, f(z,x))(f)
+    }
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
