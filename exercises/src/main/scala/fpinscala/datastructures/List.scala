@@ -98,8 +98,14 @@ object List { // `List` companion object. Contains functions for creating and wo
   def product3(ns: List[Int]) = foldLeft(ns, 1)(_ * _)
   def length3(ns: List[Int]) = foldLeft(ns, 0)((x,y) => x + 1)
   
-  def reverse(ns: List[Int]) =
-    foldLeft[Int, List[Int]](ns, Nil)((x, y) => Cons(y, x))
+  def reverse[A](ns: List[A]) =
+    foldLeft[A, List[A]](ns, Nil)((x, y) => Cons(y, x))
+    
+  def foldRight2[A,B](ns: List[A], z: B)(f: (B, A) => B): B =
+    foldLeft[A,B](reverse(ns), z)((x,y) => f(x,y))
+    
+  def append2[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight2(a1, a2)((x,y) => Cons(y, x))
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
