@@ -122,8 +122,25 @@ object List { // `List` companion object. Contains functions for creating and wo
   def filter[A](as: List[A])(f: A => Boolean): List[A] =
     foldRight2[A, List[A]](as, Nil)((x,y) => if (f(y)) Cons(y, x) else x)
     
-  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] = concat(map(as)(f))
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] = 
+    concat(map(as)(f))
   
-  def filter2[A](as: List[A])(f: A => Boolean): List[A] = flatMap(as)((x) => if (f(x)) List(x) else Nil)
+  def filter2[A](as: List[A])(f: A => Boolean): List[A] = 
+    flatMap(as)((x) => if (f(x)) List(x) else Nil)
   
+  def vectorAdd(a1: List[Int], a2: List[Int]): List[Int] =
+    (a1, a2) match {
+      case (Nil, Nil) => Nil
+      case (Cons(x1, xs1), Nil) => Cons(x1, vectorAdd(xs1, a2))
+      case (Nil, Cons(x2, xs2)) => Cons(x2, vectorAdd(a1, xs2))
+      case (Cons(x1, xs1), Cons(x2, xs2)) => Cons(x1 + x2, vectorAdd(xs1, xs2))
+    }
+  
+  def zipWith[A](a1: List[A], a2: List[A])(f: (A, A) => A): List[A] =
+    (a1, a2) match {
+      case (Nil, Nil) => Nil
+      case (Cons(x1, xs1), Nil) => Cons(x1, zipWith(xs1, a2)(f))
+      case (Nil, Cons(x2, xs2)) => Cons(x2, zipWith(a1, xs2)(f))
+      case (Cons(x1, xs1), Cons(x2, xs2)) => Cons(f(x1,x2), zipWith(xs1, xs2)(f))
+    }
 }
