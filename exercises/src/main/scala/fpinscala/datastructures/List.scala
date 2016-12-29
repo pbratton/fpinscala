@@ -97,6 +97,9 @@ object List { // `List` companion object. Contains functions for creating and wo
   def sum3(ns: List[Int]) = foldLeft(ns, 0)(_ + _)
   def product3(ns: List[Int]) = foldLeft(ns, 1)(_ * _)
   def length3(ns: List[Int]) = foldLeft(ns, 0)((x,y) => x + 1)
+  
+  def reverse(ns: List[Int]) =
+    foldLeft[Int, List[Int]](ns, Nil)((x, y) => Cons(y, x))
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 }
